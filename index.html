@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Akshat Vora · AKLV Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "dark",
+  "crosshair": true
+}/*EDITMODE-END*/;
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script type="text/babel" src="ui.jsx"></script>
+<script type="text/babel" src="sections.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+function App() {
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('aklv-tweaks') || 'null'); } catch { return null; } })();
+  const initial = { ...window.TWEAK_DEFAULTS, ...(saved || {}) };
+  const [theme, setTheme] = useState(initial.theme || 'dark');
+  const [crosshair, setCrosshair] = useState(initial.crosshair !== false);
+  const [cmdOpen, setCmdOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [konami, setKonami] = useState(false);
+  const konamiSeq = useRef([]);
+  const konamiTarget = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('aklv-tweaks', JSON.stringify({ theme, crosshair }));
+  }, [theme, crosshair]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      // Cmd palette: / or cmd+k
+      if ((e.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+        e.preventDefault();
+        setCmdOpen(true);
+      }
+      if (e.key === 'Escape') setCmdOpen(false);
+      // Konami
+      konamiSeq.current = [...konamiSeq.current, e.key].slice(-konamiTarget.length);
+      if (konamiSeq.current.join(',') === konamiTarget.join(',')) {
+        setKonami(true);
+        setTimeout(() => setKonami(false), 6000);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Tweaks host protocol
+  useEffect(() => {
+    const onMsg = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setEditMode(true);
+      if (e.data?.type === '__deactivate_edit_mode') setEditMode(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const persist = (next) => {
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+  };
+
+  return (
+    <>
+      {crosshair && <Crosshair />}
+      <Header theme={theme} setTheme={(t) => { setTheme(t); persist({ theme: t }); }} onOpenCmd={() => setCmdOpen(true)} />
+      <main>
+        <Hero />
+        <About />
+        <Work />
+        <Projects />
+        <Skills />
+        <EduCerts />
+        <Repos />
+        <GHStats />
+        <Contact />
+      </main>
+      <CmdK open={cmdOpen} onClose={() => setCmdOpen(false)} />
+
+      {editMode && (
+        <div className="tweaks">
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, borderBottom: '1px solid var(--line)', paddingBottom: 6 }}>
+            <span className="mono tiny" style={{ color: 'var(--green)' }}>▸ TWEAKS</span>
+            <span className="mono tiny mute">AKLV.v1</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div>
+              <div className="tiny mute" style={{ marginBottom: 4 }}>Theme</div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {['dark','light'].map(t => (
+                  <button key={t} onClick={() => { setTheme(t); persist({ theme: t }); }} className="btn" style={{ padding: '4px 8px', fontSize: 10, flex: 1, borderColor: theme === t ? 'var(--green)' : 'var(--line-2)', color: theme === t ? 'var(--green)' : 'var(--ink)' }}>{t.toUpperCase()}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="tiny mute" style={{ marginBottom: 4 }}>Crosshair cursor</div>
+              <button onClick={() => { setCrosshair(!crosshair); persist({ crosshair: !crosshair }); }} className="btn" style={{ padding: '4px 8px', fontSize: 10, width: '100%', borderColor: crosshair ? 'var(--green)' : 'var(--line-2)', color: crosshair ? 'var(--green)' : 'var(--ink)' }}>{crosshair ? 'ON' : 'OFF'}</button>
+            </div>
+            <div className="tiny mute" style={{ borderTop: '1px solid var(--line)', paddingTop: 6 }}>Tip: press <span className="mono" style={{ color: 'var(--green)' }}>/</span> for cmd palette · try ↑↑↓↓←→←→ba</div>
+          </div>
+        </div>
+      )}
+
+      {konami && (
+        <div style={{ position: 'fixed', top: 80, left: '50%', transform: 'translateX(-50%)', zIndex: 60, background: 'var(--bg-1)', border: '1px solid var(--green)', padding: '12px 20px', boxShadow: '0 0 30px rgba(34,197,94,0.4)' }}>
+          <div className="mono" style={{ color: 'var(--green)' }}>◆ CHEAT ACTIVATED · +1 INTERNSHIP · +30 CGPA · ∞ COFFEE</div>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+// Shared data for portfolio
+var PROFILE = {
+  name: "Akshat Vora",
+  handle: "AKLV",
+  role: "Analyst · Data Scientist · Cybersecurity · Fintech · Software Engineer · Innovator",
+  tagline: "Analyst, data scientist, cybersecurity thinker, fintech builder and software engineer — an idea innovator turning ambiguous problems into structured, shippable systems.",
+  location: "Mumbai, IN",
+  email: "akshatbvora@gmail.com",
+  phone: "+91 8850490510",
+  github: "https://github.com/Akilucky-rogue",
+  linkedin: "https://www.linkedin.com/in/akshat-vora-4930131a1/",
+  birth: "27.10.2004",
+};
+
+var METRICS = [
+  { label: "Public Repos", value: "28", delta: "+4 QTD" },
+  { label: "Active Internship", value: "FedEx", delta: "Planning × Eng" },
+  { label: "CGPA", value: "3.05", delta: "/ 4.00" },
+  { label: "Years Shipping", value: "03", delta: "since 2023" },
+];
+
+var EXPERIENCE = [
+  {
+    id: "FDX",
+    co: "FedEx Express (India)",
+    role: "Data Analysis & AI Automation Intern",
+    dept: "Planning & Engineering · MEISA",
+    period: "Jan 2026 — Present",
+    status: "LIVE",
+    bullets: [
+      "Building automated ETL workflows integrating distributed logistics systems across the MEISA region.",
+      "Authoring Power BI dashboards with DAX for KPI, anomaly detection and operational forecasting.",
+      "Designing data-driven solutions for process optimisation and cross-regional shipment analytics.",
+    ],
+  },
+  {
+    id: "WRR",
+    co: "Wirerr Solutions Pvt Ltd",
+    role: "Software Development Intern",
+    dept: "Remote",
+    period: "May 2025 — Jul 2025",
+    status: "DONE",
+    bullets: [
+      "Shipped RESTful API integrations and query-optimised DB features in a sprint-based Agile team.",
+      "Participated in UAT, QA and Git-based release management for production features.",
+    ],
+  },
+  {
+    id: "SER",
+    co: "SERNET Financial Services",
+    role: "Client Relationship Executive",
+    dept: "On-site · Mumbai",
+    period: "Jun 2023 — Mar 2025",
+    status: "DONE",
+    bullets: [
+      "Built Power BI dashboards and Python/SQL pipelines cutting manual reporting by 40%.",
+      "Exposed to the full lending lifecycle — pre-acquisition, portfolio analysis, KYC/AML and recoveries.",
+      "Operated LD Broking BO, Wealth Elite MF BO, ODIN Terminal and CVL KRA day-to-day.",
+    ],
+  },
+];
+
+var PROJECTS = [
+  {
+    id: "IQSP",
+    ticker: "IQSP",
+    name: "India Quant Screener Pro",
+    slug: "StockScreener",
+    tag: "FINTECH / QUANT",
+    year: "2026",
+    status: "v0.1.0-mvp",
+    summary: "Production-grade dual-profile screener across NSE/BSE/MCX with ML-ranked alpha, SHAP factor attribution and institutional-grade backtests.",
+    stack: ["Python", "LightGBM", "SHAP", "Streamlit", "yfinance", "nsepython", "FMP", "FRED"],
+    highlights: [
+      "50+ factor engine across technical, fundamental, flow and candlestick patterns",
+      "5 algo strategies each carrying a SEBI Algo-ID and white-box audit trail",
+      "Walk-forward backtest (756/252) with cost-aware Sharpe, Sortino, IC, MaxDD",
+      "Kelly sizing, kill-switch and dual Trader/Investor risk profiles",
+    ],
+    kpis: [
+      { k: "Target Sharpe", v: "≥ 2.2" },
+      { k: "Factors", v: "50+" },
+      { k: "Strategies", v: "5" },
+      { k: "Win Rate", v: "≥ 68%" },
+    ],
+    accent: "--green",
+    repo: "https://github.com/Akilucky-rogue/StockScreener",
+  },
+  {
+    id: "FDX",
+    ticker: "FDX.PLT",
+    name: "FedEx Operations Proactivity Platform",
+    slug: "FedEx",
+    tag: "LOGISTICS / DATA ENG",
+    year: "2026",
+    status: "IN PROD",
+    summary: "Real-time data pipeline integrating distributed logistics sources via REST APIs for cross-regional shipment tracking and predictive analytics.",
+    stack: ["Power BI", "DAX", "SQL", "Python", "REST", "ETL"],
+    highlights: [
+      "Real-time ETL from distributed systems across the MEISA region",
+      "SQL-based transformation procedures for KPI computation and forecasting",
+      "Automated validation workflows ensuring data quality across the pipeline",
+      "Interactive dashboards for performance monitoring and decision-making",
+    ],
+    kpis: [
+      { k: "Region", v: "MEISA" },
+      { k: "Surface", v: "Planning × Eng" },
+      { k: "Cadence", v: "Real-time" },
+      { k: "Primary KPI", v: "On-time %" },
+    ],
+    accent: "--amber",
+    repo: null,
+  },
+  {
+    id: "WLE",
+    ticker: "WLLE",
+    name: "Wall-ette — Mindful Wallet Tracker",
+    slug: "Wall-E",
+    tag: "PERSONAL FINANCE / AI",
+    year: "2025",
+    status: "DEPLOYED",
+    summary: "Zen-designed personal finance app with Firebase-backed real-time sync, Gemini-powered statement parsing and full offline-first behaviour.",
+    stack: ["React 19", "TypeScript", "Vite", "Firebase", "Firestore", "Gemini 3 Pro", "Tailwind"],
+    highlights: [
+      "Hybrid Gemini Flash + Pro pipeline for statement OCR and live categorisation",
+      "Session lock, MFA simulation, daily spend limits and security log",
+      "Conic-gradient category split, pulse chart, consistency-tier income insights",
+      "Offline-first with local storage fallback and auto-resync",
+    ],
+    kpis: [
+      { k: "Status", v: "Production" },
+      { k: "AI Models", v: "2" },
+      { k: "Platforms", v: "Web + Android" },
+      { k: "Security", v: "2FA Sim" },
+    ],
+    accent: "--cyan",
+    repo: "https://github.com/Akilucky-rogue/Wall-E",
+    live: "https://wall-e-7a113.web.app",
+  },
+  {
+    id: "GNS",
+    ticker: "GNSC",
+    name: "GenomeScan",
+    slug: "GenoScan",
+    tag: "HEALTH-TECH / ML",
+    year: "2024",
+    status: "PROTOTYPE",
+    summary: "Next-gen genomic platform for rapid variant detection, AI therapy suggestions and interactive DNA / protein visualisation.",
+    stack: ["Next.js", "TypeScript", "Tailwind", "Canvas", "ONNX / TF.js"],
+    highlights: [
+      "FASTA / VCF upload with validation and preview pipeline",
+      "Dependency-free logistic-regression PoC for variant pathogenicity scoring",
+      "Circular + linear DNA viewer, filterable variant table, rotatable protein viewer",
+      "AI therapy engine with categorised suggestions and mock trials",
+    ],
+    kpis: [
+      { k: "Formats", v: "FASTA·VCF" },
+      { k: "Viewers", v: "3" },
+      { k: "Runtimes", v: "ONNX·TFJS" },
+      { k: "Domain", v: "Clinical" },
+    ],
+    accent: "--mag",
+    repo: "https://github.com/Akilucky-rogue/GenoScan",
+  },
+  {
+    id: "ECS",
+    ticker: "ECOS",
+    name: "Eco-Sanjivani",
+    slug: "Eco-Sanjivani",
+    tag: "CLIMATE / DATA",
+    year: "2025",
+    status: "BETA",
+    summary: "Cloud-native marine conservation platform with real-time ingestion, Edge-Function workflows and strict data-quality gates.",
+    stack: ["Supabase", "PostgreSQL", "Edge Functions", "WebSocket", "Zod"],
+    highlights: [
+      "Schema, migrations, stored functions and triggers for automated workflows",
+      "Real-time ingestion via WebSocket sync and Edge Functions",
+      "Validation layer with Zod and SQL-level constraints for data integrity",
+    ],
+    kpis: [
+      { k: "Datastore", v: "Postgres" },
+      { k: "Sync", v: "WS" },
+      { k: "Valid.", v: "Zod" },
+      { k: "Domain", v: "Marine" },
+    ],
+    accent: "--blue",
+    repo: "https://github.com/Akilucky-rogue/Eco-Sanjivani",
+  },
+  {
+    id: "HSY",
+    ticker: "HSYN",
+    name: "HeartSync",
+    slug: "HeartSync",
+    tag: "HEALTH / WEARABLES",
+    year: "2025",
+    status: "R&D",
+    summary: "Experimental heart-rate telemetry workbench — wearable-stream capture, anomaly detection and caregiver alerting.",
+    stack: ["React", "TypeScript", "Signal Processing"],
+    highlights: [
+      "Stream-based HR telemetry ingestion and rolling window analytics",
+      "Anomaly detection prototype for arrhythmia / tachycardia patterns",
+      "Caregiver notification loop with severity-tiered alerts",
+    ],
+    kpis: [
+      { k: "Phase", v: "R&D" },
+      { k: "Inputs", v: "HR·SpO₂" },
+      { k: "Surface", v: "Wearable" },
+      { k: "Users", v: "Caregivers" },
+    ],
+    accent: "--red",
+    repo: "https://github.com/Akilucky-rogue/HeartSync",
+  },
+];
+
+var SKILLS = [
+  {
+    group: "Data Engineering & Pipelines",
+    items: [
+      ["ETL / ELT Pipelines", 88],
+      ["Real-time Ingestion", 80],
+      ["Data Quality & Validation", 84],
+      ["Automated Workflows", 82],
+    ],
+  },
+  {
+    group: "SQL & Databases",
+    items: [
+      ["SQL / MySQL / Postgres", 90],
+      ["Stored Procedures · Window Fns", 78],
+      ["Query Optimisation", 76],
+      ["Data Modeling · Normalisation", 80],
+    ],
+  },
+  {
+    group: "BI & Visualisation",
+    items: [
+      ["Power BI + DAX", 88],
+      ["Interactive Dashboards", 86],
+      ["KPI Development", 82],
+      ["Excel Advanced", 84],
+    ],
+  },
+  {
+    group: "Programming",
+    items: [
+      ["Python · Pandas · NumPy", 86],
+      ["TypeScript / JavaScript", 80],
+      ["C / C++ / Java", 70],
+      ["Bash · Git / GitHub", 78],
+    ],
+  },
+  {
+    group: "AI / LLM Integration",
+    items: [
+      ["Prompt Engineering", 82],
+      ["GPT · Claude · Gemini APIs", 80],
+      ["RAG Concepts", 68],
+      ["Scikit-Learn · SHAP", 72],
+    ],
+  },
+  {
+    group: "Cloud & Financial Domain",
+    items: [
+      ["AWS (S3 · IAM · VPC)", 72],
+      ["Credit / Lending Lifecycle", 78],
+      ["KYC / AML Compliance", 74],
+      ["NISM V-A · VIII (pursuing)", 80],
+    ],
+  },
+];
+
+var CERTS = [
+  { name: "AWS Cloud Architecting", desc: "Cloud data mgmt, S3, IAM, VPC, pipeline scalability", year: "2025" },
+  { name: "Deloitte Australia Data Analytics Sim.", desc: "Predictive modeling + statistical case work", year: "2025" },
+  { name: "NISM Series V-A", desc: "Mutual Fund Distributor — certified", year: "2024" },
+  { name: "NISM Series VIII", desc: "Equity Derivatives — currently pursuing", year: "2026" },
+  { name: "Ethical Hacking", desc: "Anomaly detection, risk analysis frameworks", year: "2024" },
+  { name: "Core Programming", desc: "Python · C · C++ · SQL · DS&A", year: "2023" },
+];
+
+var EDUCATION = [
+  { school: "MPSTME, NMIMS University", degree: "B.Tech — Computer Engineering", score: "CGPA 3.05 / 4.00", period: "2023 — 2026" },
+  { school: "MPSTME, NMIMS University", degree: "Diploma — Computer Engineering", score: "CGPA 3.14 / 4.00", period: "2020 — 2023" },
+  { school: "Witty International School", degree: "IGCSE", score: "78%", period: "2020" },
+];
+
+var GH_REPOS = [
+  { name: "StockScreener", lang: "Python", desc: "ML-ranked alpha + SEBI-compliant algo strategies" },
+  { name: "AMFI-webscraper", lang: "Python", desc: "Async MFD extraction by PIN code" },
+  { name: "SEBI-webscraper", lang: "Python", desc: "Recognised Intermediaries dataset grabber" },
+  { name: "IRDAI-webscraper", lang: "Python", desc: "Insurance agent locator pipeline" },
+  { name: "Wall-E", lang: "TS", desc: "Mindful AI wallet tracker" },
+  { name: "Eco-Sanjivani", lang: "TS", desc: "Marine conservation data platform" },
+  { name: "GenoScan", lang: "TS", desc: "DNA variant + therapy workbench" },
+  { name: "HeartSync", lang: "TS", desc: "HR telemetry & alerting" },
+  { name: "tickfunds-wealth-india", lang: "TS", desc: "Wealth advisor tooling" },
+  { name: "CipherShare", lang: "Go", desc: "Decentralised secure storage" },
+  { name: "Budget-Watch", lang: "TS", desc: "Budget alerting prototype" },
+  { name: "Commune-One", lang: "Py", desc: "Urban mobility analytics platform" },
+  { name: "action-eco-nexus", lang: "TS", desc: "Climate action nexus" },
+  { name: "Eco-Sync", lang: "TS", desc: "Eco data sync utility" },
+  { name: "Youth-Management-System", lang: "Java", desc: "Youth org CRM" },
+  { name: "inventory-app", lang: "TS", desc: "Inventory — biz boundless" },
+  { name: "Sure", lang: "TS", desc: "Finance surface" },
+  { name: "biz-boundless", lang: "TS", desc: "SMB ops toolkit" },
+  { name: "SusCommerce", lang: "TS", desc: "Sustainable commerce" },
+  { name: "flowchart-zen-garden", lang: "TS", desc: "Flowchart playground" },
+  { name: "Piano-project", lang: "JS", desc: "Web audio piano" },
+  { name: "My-Portfolio", lang: "TS", desc: "Content-driven portfolio shell" },
+  { name: "CreditSamriddhi", lang: "TS", desc: "Credit intelligence (private)" },
+  { name: "Aethion", lang: "TS", desc: "Private build" },
+  { name: "Tradesim", lang: "Py", desc: "Automated trading analytics (private)" },
+];
+
+window.PORTFOLIO = { PROFILE, METRICS, EXPERIENCE, PROJECTS, SKILLS, CERTS, EDUCATION, GH_REPOS };
