@@ -38,7 +38,7 @@ html[data-theme="light"] {
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); overflow-x: hidden; }
 body {
   font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 13px;
@@ -389,7 +389,76 @@ html[data-theme="light"] .term { background: #1a1d14; color: #e6edf3; --ink: #e6
 }
 
 /* Responsive */
-@media (max-width: 760px) {
-  body { font-size: 12px; }
-  .metric-value { font-size: 32px; }
+@media (max-width: 960px) {
+  .hide-md { display: none !important; }
 }
+@media (max-width: 760px) {
+  body { font-size: 12px; cursor: auto; }
+  .metric-value { font-size: 26px; }
+  .hero-name { font-size: clamp(48px, 14vw, 88px) !important; }
+  .section-title { font-size: clamp(28px, 8vw, 44px) !important; }
+  .xhair-h, .xhair-v { display: none !important; }
+  .tweaks { right: 8px; bottom: 8px; min-width: 180px; padding: 10px; font-size: 10px; }
+  .data-table th, .data-table td { padding: 6px 8px; font-size: 11px; }
+  .data-table { font-size: 11px; }
+  .term { font-size: 11px; padding: 10px; }
+  .cell-head { padding: 5px 8px; font-size: 9px; }
+  .btn { padding: 8px 12px; font-size: 11px; }
+  header { font-size: 10px; }
+
+  /* Collapse most grids to single column */
+  main section > div[style*="grid-template-columns"],
+  main section > div > div[style*="grid-template-columns"],
+  main section > div > div > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  /* Metrics: 2x2 */
+  main section > div > div[style*="repeat(4, 1fr)"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+  }
+  /* Signal grid: keep 2 cols */
+  main section .cell > div[style*="1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  /* KPI grid inside project detail: keep 2x2 */
+  /* Repos grid: 2 cols */
+  main section > div > div[style*="repeat(4, 1fr)"][style*="border: 1px solid"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .metric-tile { border-right: none !important; border-bottom: 1px solid var(--line); }
+
+  /* GitHub heatmap: scroll horizontally */
+  main section .cell div[style*="repeat(52, 1fr)"] {
+    min-width: 560px;
+  }
+  main section .cell > div[style*="padding: 16"] {
+    overflow-x: auto;
+  }
+
+  /* Project detail: remove right border on stacked panels */
+  main section .cell > div > div[style*="borderRight"] {
+    border-right: none !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+
+  /* Table overflow — put scroll on the cell wrapper */
+  .cell { overflow-x: auto; }
+  .cell table { min-width: 100%; }
+
+  /* Hero actions wrap nicely */
+  .btn { flex: 1 1 140px; justify-content: center; }
+
+  /* Reduce heavy padding */
+  section > div[style*="padding: 32px 20px"] { padding: 20px 14px !important; }
+  section > div[style*="padding: '60px 20px"] { padding: 32px 14px !important; }
+}
+@media (max-width: 520px) {
+  .hide-sm { display: none !important; }
+  .hero-name { font-size: clamp(40px, 15vw, 72px) !important; }
+  .chip { font-size: 9px; padding: 2px 6px; }
+}
+
+

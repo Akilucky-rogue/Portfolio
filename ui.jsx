@@ -38,6 +38,7 @@ function Ticker() {
 function Crosshair() {
   const [pos, setPos] = useState({ x: -100, y: -100 });
   useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) return;
     let raf;
     const onMove = (e) => {
       cancelAnimationFrame(raf);
@@ -126,25 +127,25 @@ function Header({ theme, setTheme, onOpenCmd }) {
 
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--bg)', borderBottom: '1px solid var(--line)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 20px', fontSize: 11 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 20px', fontSize: 11, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 8, height: 8, background: 'var(--green)', boxShadow: '0 0 6px var(--green)', borderRadius: '50%' }} />
           <span className="mono" style={{ letterSpacing: '0.12em' }}>AKLV · TERMINAL</span>
         </div>
-        <span className="mute">|</span>
-        <div className="mono mute">SESS {hhmmss} IST · {dd}</div>
-        <span className="mute">|</span>
-        <div className="mono" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <span className="mute hide-sm">|</span>
+        <div className="mono mute hide-sm">SESS {hhmmss} IST · {dd}</div>
+        <span className="mute hide-md">|</span>
+        <div className="mono hide-md" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <span className="mute">FEED</span>
           <span className="led-row">{Array.from({length:12}).map((_,i)=> <span key={i} className={`led ${i<10?'on':(i===10?'warn':'')}`} />)}</span>
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="#about" className="ulink xs">01 · About</a>
-          <a href="#work" className="ulink xs">02 · Work</a>
-          <a href="#projects" className="ulink xs">03 · Projects</a>
-          <a href="#skills" className="ulink xs">04 · Skills</a>
-          <a href="#edu" className="ulink xs">05 · Edu</a>
-          <a href="#contact" className="ulink xs">06 · Contact</a>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <a href="#about" className="ulink xs hide-md">01 · About</a>
+          <a href="#work" className="ulink xs hide-md">02 · Work</a>
+          <a href="#projects" className="ulink xs hide-md">03 · Projects</a>
+          <a href="#skills" className="ulink xs hide-md">04 · Skills</a>
+          <a href="#edu" className="ulink xs hide-md">05 · Edu</a>
+          <a href="#contact" className="ulink xs">Contact</a>
           <button className="btn" style={{ padding: '6px 10px', fontSize: 10 }} onClick={onOpenCmd}>
             <span>⌘</span><span>/</span>
           </button>
