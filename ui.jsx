@@ -1,6 +1,51 @@
 // Reusable UI bits
 const { useState, useEffect, useRef, useMemo } = React;
 
+// --- Scroll reveal hook + components ---
+function useReveal(opts = {}) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (!ref.current || shown) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { setShown(true); io.disconnect(); } });
+    }, { threshold: opts.threshold ?? 0.15, rootMargin: opts.rootMargin ?? '0px 0px -8% 0px' });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [shown]);
+  return [ref, shown];
+}
+function Reveal({ as = 'div', kind = 'reveal', delay = 0, className = '', children, ...rest }) {
+  const [ref, shown] = useReveal();
+  const Tag = as;
+  return (
+    <Tag ref={ref} className={`${kind} ${shown ? 'in' : ''} ${className}`} style={{ ...(rest.style || {}), transitionDelay: shown && delay ? `${delay}ms` : undefined }} {...rest}>
+      {children}
+    </Tag>
+  );
+}
+function RevealWords({ text, as = 'h2', className = '' }) {
+  const [ref, shown] = useReveal();
+  const Tag = as;
+  const parts = text.split(/(<em>.*?<\/em>)/g).filter(Boolean);
+  let wi = 0;
+  return (
+    <Tag ref={ref} className={`reveal-words ${shown ? 'in' : ''} ${className}`}>
+      {parts.map((p, pi) => {
+        if (p.startsWith('<em>')) {
+          const inner = p.replace(/<\/?em>/g, '');
+          return inner.split(/\s+/).filter(Boolean).map((w, i) => (
+            <span key={`${pi}-${i}`} className="w" style={{ fontStyle: 'italic', color: 'var(--green)', transitionDelay: `${(wi++) * 55}ms` }}>{w}</span>
+          ));
+        }
+        return p.split(/\s+/).filter(Boolean).map((w, i) => (
+          <span key={`${pi}-${i}`} className="w" style={{ transitionDelay: `${(wi++) * 55}ms` }}>{w}</span>
+        ));
+      })}
+    </Tag>
+  );
+}
+
 // --- Ticker tape ---
 function Ticker() {
   const items = [
@@ -212,4 +257,4 @@ function CmdK({ open, onClose }) {
   );
 }
 
-Object.assign(window, { Ticker, Crosshair, Sparkline, Candles, Header, CmdK });
+Object.assign(window, { Ticker, Crosshair, Sparkline, Candles, Header, CmdK, useReveal, Reveal, RevealWords });

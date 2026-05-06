@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="intro.css" />
 </head>
 <body>
 <div id="root"></div>
@@ -15,9 +16,12 @@
 <script>
 window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "dark",
-  "crosshair": false
+  "crosshair": true,
+  "playIntro": true
 }/*EDITMODE-END*/;
 </script>
+
+<script src="intro.js"></script>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -35,6 +39,8 @@ function App() {
   const initial = { ...window.TWEAK_DEFAULTS, ...(saved || {}) };
   const [theme, setTheme] = useState(initial.theme || 'dark');
   const [crosshair, setCrosshair] = useState(initial.crosshair !== false);
+  const [playIntro, setPlayIntro] = useState(initial.playIntro !== false);
+  const [introDone, setIntroDone] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [konami, setKonami] = useState(false);
@@ -43,8 +49,17 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('aklv-tweaks', JSON.stringify({ theme, crosshair }));
-  }, [theme, crosshair]);
+    localStorage.setItem('aklv-tweaks', JSON.stringify({ theme, crosshair, playIntro }));
+  }, [theme, crosshair, playIntro]);
+
+  // Play 3D DNA intro on first arrival (per session)
+  useEffect(() => {
+    if (!playIntro) { setIntroDone(true); return; }
+    if (!window.AKLVIntro || !window.AKLVIntro.shouldPlay()) { setIntroDone(true); return; }
+    window.AKLVIntro.play({
+      onComplete: () => { setIntroDone(true); }
+    });
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -82,9 +97,10 @@ function App() {
 
   return (
     <>
-      {crosshair && <Crosshair />}
-      <Header theme={theme} setTheme={(t) => { setTheme(t); persist({ theme: t }); }} onOpenCmd={() => setCmdOpen(true)} />
-      <main>
+      {introDone && crosshair && <Crosshair />}
+      {introDone && <Header theme={theme} setTheme={(t) => { setTheme(t); persist({ theme: t }); }} onOpenCmd={() => setCmdOpen(true)} />}
+      {introDone && (
+        <main className="post-intro-fade">
         <Hero />
         <About />
         <Work />
@@ -94,8 +110,9 @@ function App() {
         <Repos />
         <GHStats />
         <Contact />
-      </main>
-      <CmdK open={cmdOpen} onClose={() => setCmdOpen(false)} />
+        </main>
+      )}
+      {introDone && <CmdK open={cmdOpen} onClose={() => setCmdOpen(false)} />}
 
       {editMode && (
         <div className="tweaks">
@@ -115,6 +132,13 @@ function App() {
             <div>
               <div className="tiny mute" style={{ marginBottom: 4 }}>Crosshair cursor</div>
               <button onClick={() => { setCrosshair(!crosshair); persist({ crosshair: !crosshair }); }} className="btn" style={{ padding: '4px 8px', fontSize: 10, width: '100%', borderColor: crosshair ? 'var(--green)' : 'var(--line-2)', color: crosshair ? 'var(--green)' : 'var(--ink)' }}>{crosshair ? 'ON' : 'OFF'}</button>
+            </div>
+            <div>
+              <div className="tiny mute" style={{ marginBottom: 4 }}>3D DNA Intro</div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                <button onClick={() => { setPlayIntro(!playIntro); persist({ playIntro: !playIntro }); }} className="btn" style={{ padding: '4px 8px', fontSize: 10, flex: 1, borderColor: playIntro ? 'var(--green)' : 'var(--line-2)', color: playIntro ? 'var(--green)' : 'var(--ink)' }}>{playIntro ? 'ON' : 'OFF'}</button>
+                <button onClick={() => { window.AKLVIntro?.forceReplay(); setIntroDone(false); window.AKLVIntro?.play({ onComplete: () => { setIntroDone(true); } }); }} className="btn" style={{ padding: '4px 8px', fontSize: 10, flex: 1 }}>REPLAY</button>
+              </div>
             </div>
             <div className="tiny mute" style={{ borderTop: '1px solid var(--line)', paddingTop: 6 }}>Tip: press <span className="mono" style={{ color: 'var(--green)' }}>/</span> for cmd palette · try ↑↑↓↓←→←→ba</div>
           </div>

@@ -3,6 +3,9 @@ const { PROFILE, METRICS, EXPERIENCE, PROJECTS, SKILLS, CERTS, EDUCATION, GH_REP
 // --- Hero ---
 function Hero() {
   const [cmd, setCmd] = useState('');
+  const [lRef, lShown] = useReveal({ threshold: 0.05 });
+  const [tRef, tShown] = useReveal({ threshold: 0.05 });
+  const [mRef, mShown] = useReveal({ threshold: 0.1 });
   const lines = [
     "$ whoami",
     "akshat.vora — b. 27.10.2004 — Mumbai, IN",
@@ -18,7 +21,7 @@ function Hero() {
       <div style={{ position: 'absolute', inset: 0 }} className="grid-bg" />
       <div style={{ position: 'relative', maxWidth: 1400, margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 48, alignItems: 'end' }}>
-          <div>
+          <div ref={lRef} className={`reveal-l ${lShown ? 'in' : ''}`}>
             <div style={{ display: 'flex', gap: 8, marginBottom: 20, alignItems: 'center', flexWrap: 'wrap' }}>
               <span className="chip ok">● LIVE · AVAILABLE FOR 2026</span>
               <span className="chip">ANALYST</span>
@@ -41,7 +44,7 @@ function Hero() {
               <a className="btn" href={PROFILE.github} target="_blank">◆ GITHUB</a>
             </div>
           </div>
-          <div className="cell">
+          <div ref={tRef} className={`cell reveal-r ${tShown ? 'in' : ''}`}>
             <div className="cell-head"><span>TERM · /home/akshat</span><span className="dot" /></div>
             <div className="term">
               {lines.map((l, i) => (
@@ -61,7 +64,7 @@ function Hero() {
         </div>
 
         {/* Metrics strip */}
-        <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: '1px solid var(--line)' }}>
+        <div ref={mRef} className={`reveal-stagger ${mShown ? 'in' : ''}`} style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: '1px solid var(--line)' }}>
           {METRICS.map((m, i) => (
             <div key={i} className="metric-tile" style={{ borderRight: i < 3 ? '1px solid var(--line)' : 'none', background: 'var(--bg-1)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -81,8 +84,9 @@ function Hero() {
 }
 
 function SectionHead({ num, title, sub }) {
+  const [ref, shown] = useReveal({ threshold: 0.3 });
   return (
-    <div style={{ padding: '48px 20px 24px', borderBottom: '1px dashed var(--line)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', maxWidth: 1400, margin: '0 auto' }}>
+    <div ref={ref} className={`reveal ${shown ? 'in' : ''}`} style={{ padding: '48px 20px 24px', borderBottom: '1px dashed var(--line)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', maxWidth: 1400, margin: '0 auto' }}>
       <div>
         <div className="section-num">/ {num} · {sub}</div>
         <div className="section-title">{title}</div>
@@ -92,13 +96,22 @@ function SectionHead({ num, title, sub }) {
   );
 }
 
+function Rev({ kind = 'reveal', delay = 0, className = '', style, children, ...rest }) {
+  const [ref, shown] = useReveal();
+  return (
+    <div ref={ref} className={`${kind} ${shown ? 'in' : ''} ${className}`} style={{ ...(style || {}), transitionDelay: shown && delay ? `${delay}ms` : undefined }} {...rest}>{children}</div>
+  );
+}
+
 // --- About ---
 function About() {
+  const [lRef, lShown] = useReveal({ threshold: 0.1 });
+  const [rRef, rShown] = useReveal({ threshold: 0.1 });
   return (
     <section id="about">
       <SectionHead num="01" sub="OVERVIEW" title="About." />
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px', display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 48 }}>
-        <div>
+        <div ref={lRef} className={`reveal-l ${lShown ? 'in' : ''}`}>
           <p className="serif" style={{ fontSize: 28, lineHeight: 1.4, margin: 0, color: 'var(--ink)', textWrap: 'pretty' }}>
             I'm a final-year Computer Engineering student at <span style={{ color: 'var(--green)' }}>NMIMS Mumbai</span>, currently interning with the Planning & Engineering group at <span style={{ color: 'var(--amber)' }}>FedEx Express</span> — building automated ETL workflows and forecasting dashboards across the MEISA region.
           </p>
@@ -108,7 +121,7 @@ function About() {
             <p>I've shipped this way for financial services (SERNET), for logistics (FedEx), and across a portfolio of personal builds. Outside work I read a lot of SEBI circulars.</p>
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div ref={rRef} className={`reveal-r ${rShown ? 'in' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="cell">
             <div className="cell-head"><span>IDENT · AKLV</span><span className="mute">PUB</span></div>
             <div style={{ padding: 14, fontSize: 12 }}>
@@ -150,11 +163,13 @@ function About() {
 
 // --- Experience ---
 function Work() {
+  const [tRef, tShown] = useReveal({ threshold: 0.1 });
+  const [gRef, gShown] = useReveal({ threshold: 0.1 });
   return (
     <section id="work" style={{ background: 'var(--bg-1)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
       <SectionHead num="02" sub="EMPLOYMENT LEDGER" title="Experience." />
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px' }}>
-        <table className="data-table">
+        <table ref={tRef} className={`data-table reveal ${tShown ? 'in' : ''}`}>
           <thead>
             <tr>
               <th style={{ width: 60 }}>ID</th>
@@ -179,7 +194,7 @@ function Work() {
           </tbody>
         </table>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 24 }}>
+        <div ref={gRef} className={`reveal-stagger ${gShown ? 'in' : ''}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 24 }}>
           {EXPERIENCE.map((e) => (
             <div key={e.id} className="cell">
               <div className="cell-head">
@@ -204,13 +219,15 @@ function Work() {
 // --- Projects ---
 function Projects() {
   const [active, setActive] = useState(0);
+  const [wRef, wShown] = useReveal({ threshold: 0.05 });
+  const [dRef, dShown] = useReveal({ threshold: 0.05 });
   const p = PROJECTS[active];
   return (
     <section id="projects">
       <SectionHead num="03" sub="SELECTED WORK" title="Projects." />
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px' }}>
         {/* Ticker table */}
-        <div className="cell" style={{ marginBottom: 24 }}>
+        <div ref={wRef} className={`cell reveal ${wShown ? 'in' : ''}`} style={{ marginBottom: 24 }}>
           <div className="cell-head"><span>WATCHLIST · 6 / 28</span><span className="mute">CLICK TO LOAD</span></div>
           <table className="data-table">
             <thead>
@@ -239,7 +256,7 @@ function Projects() {
         </div>
 
         {/* Detail panel */}
-        <div key={p.id} className="cell" style={{ borderColor: `var(${p.accent})` }}>
+        <div ref={dRef} key={p.id} className={`cell reveal-scale ${dShown ? 'in' : ''}`} style={{ borderColor: `var(${p.accent})` }}>
           <div className="cell-head" style={{ borderColor: `var(${p.accent})` }}>
             <span style={{ color: `var(${p.accent})` }}>● {p.ticker} · {p.tag}</span>
             <span className="mute">{p.year} · {p.status}</span>
@@ -288,6 +305,46 @@ function Skills() {
   return (
     <section id="skills" style={{ background: 'var(--bg-1)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
       <SectionHead num="04" sub="FACTOR EXPOSURES" title="Skills Matrix." />
+      <SkillsGrid />
+    </section>
+  );
+}
+
+function SkillsGrid() {
+  const [ref, shown] = useReveal({ threshold: 0.1 });
+  return (
+    <div ref={ref} className={`reveal-stagger ${shown ? 'in' : ''}`} style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+      {SKILLS.map((g, gi) => (
+        <SkillCard key={gi} g={g} animate={shown} />
+      ))}
+    </div>
+  );
+}
+
+function SkillCard({ g, animate }) {
+  return (
+    <div className="cell">
+      <div className="cell-head"><span>{g.group}</span><span className="mute">{g.items.length}</span></div>
+      <div style={{ padding: 16 }}>
+        {g.items.map(([name, pct], i) => (
+          <div key={i} style={{ marginBottom: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
+              <span>{name}</span>
+              <span className="mono mute xs">{pct}%</span>
+            </div>
+            <div className="skill-bar">
+              <div className="skill-bar-fill" style={{ width: animate ? pct + '%' : '0%', transition: `width 1.1s cubic-bezier(.7,0,.3,1) ${0.3 + i * 0.07}s` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function _SkillsLegacy() {
+  return (
+    <section style={{ display: 'none' }}>
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
         {SKILLS.map((g, gi) => (
           <div key={gi} className="cell">
@@ -317,7 +374,7 @@ function EduCerts() {
   return (
     <section id="edu">
       <SectionHead num="05" sub="CREDENTIALS" title="Education & Certs." />
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <Rev kind="reveal-stagger" style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 20px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
         <div className="cell">
           <div className="cell-head"><span>EDUCATION</span><span className="mute">{EDUCATION.length}</span></div>
           <div>
@@ -351,7 +408,7 @@ function EduCerts() {
             </tbody>
           </table>
         </div>
-      </div>
+      </Rev>
     </section>
   );
 }
@@ -377,7 +434,7 @@ function Repos() {
           ))}
           <span className="mute xs" style={{ marginLeft: 'auto' }}>{filtered.length} / {GH_REPOS.length} repos · live from Akilucky-rogue</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: '1px solid var(--line)' }}>
+        <Rev kind="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: '1px solid var(--line)' }}>
           {filtered.map((r, i) => (
             <a key={r.name} href={`https://github.com/Akilucky-rogue/${r.name}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="proj-card" style={{ border: 'none', borderRight: (i+1) % 4 ? '1px solid var(--line)' : 'none', borderBottom: '1px solid var(--line)', padding: 14 }}>
@@ -390,7 +447,7 @@ function Repos() {
               </div>
             </a>
           ))}
-        </div>
+        </Rev>
       </div>
     </section>
   );
