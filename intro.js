@@ -7,18 +7,22 @@
     const THREE = window.THREE;
     if (!THREE) { onComplete?.(); return; }
 
+    // Detect mobile / low-power for downscaled scene
+    const isMobile = window.matchMedia('(max-width: 760px)').matches || (navigator.userAgent || '').toLowerCase().includes('mobi');
+    const isLowEnd = isMobile || (navigator.hardwareConcurrency || 4) <= 4;
+
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x05060a, 0.009);
+    scene.fog = new THREE.FogExp2(0x05060a, isMobile ? 0.011 : 0.009);
 
-    const camera = new THREE.PerspectiveCamera(64, window.innerWidth / window.innerHeight, 0.1, 1200);
+    const camera = new THREE.PerspectiveCamera(isMobile ? 76 : 64, window.innerWidth / window.innerHeight, 0.1, 1200);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: false, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x05060a, 1);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.18;
     mount.appendChild(renderer.domElement);
 
     // ---- Nebula backdrop (soft gradient discs) ----
@@ -60,16 +64,16 @@
       g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       return new THREE.Points(g, new THREE.PointsMaterial({ color, size, transparent: true, opacity, sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false }));
     }
-    const starsFar  = makeStars(1800, 350, 600, 0.5, 0.55, 0xc8d2e4);
-    const starsMid  = makeStars(800,  200, 350, 0.8, 0.85, 0xffffff);
-    const starsWarm = makeStars(300,  150, 320, 1.1, 0.7,  0xffd9a0);
+    const starsFar  = makeStars(isLowEnd ? 800  : 1800, 350, 600, 0.5, 0.55, 0xc8d2e4);
+    const starsMid  = makeStars(isLowEnd ? 400  : 800,  200, 350, 0.8, 0.85, 0xffffff);
+    const starsWarm = makeStars(isLowEnd ? 150  : 300,  150, 320, 1.1, 0.7,  0xffd9a0);
     scene.add(starsFar, starsMid, starsWarm);
 
     // ---- DNA helix staircase ----
     const TOP = 240;
-    const HELIX_RADIUS = 6.5;
+    const HELIX_RADIUS = isMobile ? 5.2 : 6.5;
     const TURNS = 7;
-    const RUNGS = 160;
+    const RUNGS = isLowEnd ? 110 : 160;
     const helixGroup = new THREE.Group();
     scene.add(helixGroup);
 
@@ -211,7 +215,7 @@
 
     // ---- Embers / dust (rising) ----
     const dustGeo = new THREE.BufferGeometry();
-    const dustCount = 700;
+    const dustCount = isLowEnd ? 320 : 700;
     const dustPos = new Float32Array(dustCount * 3);
     const dustSpd = new Float32Array(dustCount);
     for (let i = 0; i < dustCount; i++) {
@@ -275,18 +279,20 @@
     // ---- Side glyphs: milestones along the climb ----
     // Each item: { at: 0..1, side: 'L'|'R', kind, ...content }
     const GLYPHS = [
-      { at: 0.06, side: 'L', kind: 'origin',  year: '2004',     title: 'Origin',          sub: 'Mumbai, IN \u00b7 27.10' },
-      { at: 0.13, side: 'R', kind: 'school',  year: '2010\u201322', title: 'Foundations',     sub: 'Witty International School \u00b7 80%' },
-      { at: 0.22, side: 'L', kind: 'edu',     year: '2023\u201326', title: 'NMIMS MPSTME',    sub: 'B.Tech CE \u00b7 CGPA 3.05' },
-      { at: 0.30, side: 'R', kind: 'cert',    year: '2024',     title: 'NISM V-A',        sub: 'Mutual Fund Distributors' },
-      { at: 0.37, side: 'L', kind: 'work',    year: '2024',     title: 'SERNET',          sub: 'Lending analytics \u00b7 KYC/AML' },
-      { at: 0.44, side: 'R', kind: 'project', year: 'Q3 24',    title: 'IQSP',            sub: 'Quant screener \u00b7 LightGBM' },
-      { at: 0.51, side: 'L', kind: 'project', year: 'Q4 24',    title: 'Wall-ette',       sub: 'Wallet \u00b7 React/Firebase' },
-      { at: 0.57, side: 'R', kind: 'cert',    year: '2025',     title: 'Ethical Hacking', sub: 'Cybersec foundations' },
-      { at: 0.64, side: 'L', kind: 'project', year: 'Q1 25',    title: 'GenoScan',        sub: 'DNA workbench \u00b7 ML' },
-      { at: 0.71, side: 'R', kind: 'project', year: 'Q2 25',    title: 'Eco-Sanjivani',   sub: 'Marine conservation' },
-      { at: 0.78, side: 'L', kind: 'work',    year: '2025\u201326', title: 'FedEx Express',   sub: 'Planning \u00b7 MEISA \u00b7 ETL/PowerBI' },
-      { at: 0.86, side: 'R', kind: 'now',     year: 'Now',      title: 'Building',        sub: 'Open to 2026 roles' },
+      { at: 0.05, side: 'L', kind: 'origin',  year: '2004',     title: 'Origin',          sub: 'Mumbai, IN \u00b7 27.10' },
+      { at: 0.12, side: 'R', kind: 'school',  year: '2010\u201322', title: 'Foundations',     sub: 'Witty International School \u00b7 80%' },
+      { at: 0.19, side: 'L', kind: 'edu',     year: '2023\u201326', title: 'NMIMS MPSTME',    sub: 'B.Tech CE \u00b7 CGPA 3.05' },
+      { at: 0.26, side: 'R', kind: 'cert',    year: '2024',     title: 'NISM V-A',        sub: 'Mutual Fund Distributors' },
+      { at: 0.33, side: 'L', kind: 'work',    year: '23\u201325',   title: 'SERNET',          sub: 'Lending analytics \u00b7 KYC/AML' },
+      { at: 0.40, side: 'R', kind: 'project', year: 'Q4 24',    title: 'Wall-ette',       sub: 'AI wallet \u00b7 React/Firebase' },
+      { at: 0.46, side: 'L', kind: 'project', year: 'Q1 25',    title: 'GenoScan',        sub: 'DNA workbench \u00b7 ONNX' },
+      { at: 0.52, side: 'R', kind: 'cert',    year: '2025',     title: 'Ethical Hacking', sub: 'Cybersec foundations' },
+      { at: 0.58, side: 'L', kind: 'project', year: 'Q2 25',    title: 'Eco-Sanjivani',   sub: 'Marine conservation' },
+      { at: 0.64, side: 'R', kind: 'work',    year: '25\u201326',   title: 'FedEx Express',   sub: 'Planning \u00b7 MEISA \u00b7 ETL/PowerBI' },
+      { at: 0.70, side: 'L', kind: 'project', year: 'Apr 26',   title: 'IQSP v0.1 MVP',   sub: 'Quant screener \u00b7 LightGBM \u00b7 SHAP' },
+      { at: 0.76, side: 'R', kind: 'project', year: 'Apr 26',   title: 'Regulator Trio',  sub: 'SEBI \u00b7 AMFI \u00b7 IRDAI scrapers' },
+      { at: 0.82, side: 'L', kind: 'project', year: 'Q2 26',    title: 'CreditSamriddhi', sub: 'Credit intelligence (private)' },
+      { at: 0.88, side: 'R', kind: 'now',     year: 'Now',      title: 'Building',        sub: 'Open to 2026 roles' },
     ];
 
     GLYPHS.forEach((g, i) => {
@@ -516,6 +522,20 @@
       return { pos: new THREE.Vector3(x, y, z), look: new THREE.Vector3(lookX, aheadY, lookZ) };
     }
 
+    // Apply subtle "breathing" head-bob + sway to any computed camera position
+    // for realistic first-person feel (without making the user dizzy).
+    function applyBreath(cam, look, t, intensity = 1) {
+      const breath = Math.sin(t * 0.9) * 0.12 * intensity;
+      const sway   = Math.sin(t * 0.45) * 0.18 * intensity;
+      const microX = Math.sin(t * 4.1) * 0.025 * intensity;
+      const microY = Math.cos(t * 3.3) * 0.020 * intensity;
+      cam.position.y += breath + microY;
+      cam.position.x += sway + microX;
+      // tiny roll
+      cam.up.set(Math.sin(t * 0.3) * 0.012 * intensity, 1, 0);
+      cam.lookAt(look);
+    }
+
     let last = performance.now();
     let elapsed = 0;
     function tick(now) {
@@ -590,7 +610,8 @@
         const { pos, look } = computeCameraOnPath(camP);
         camera.position.copy(pos);
         camera.lookAt(look);
-        camera.fov = 72;
+        applyBreath(camera, look, elapsed, 1.0);
+        camera.fov = isMobile ? 76 : 72;
         camera.updateProjectionMatrix();
 
         // Reset gate state
@@ -611,14 +632,14 @@
       } else if (openingState === 'idle') {
         // ARRIVAL — camera locks just below the gate, faces the doors
         const arrivalCam = computeCameraOnPath(0.97);
-        // Push camera slightly back+down so the door fills the view
+        const lookAt = new THREE.Vector3(0, TOP + 6, 0);
         camera.position.set(
           arrivalCam.pos.x * 0.4,
           TOP - 4,
           arrivalCam.pos.z * 0.4 - 6
         );
-        camera.lookAt(0, TOP + 6, 0);
-        camera.fov = 64;
+        applyBreath(camera, lookAt, elapsed, 1.3);
+        camera.fov = isMobile ? 70 : 64;
         camera.updateProjectionMatrix();
 
         doorLPivot.rotation.y = 0;

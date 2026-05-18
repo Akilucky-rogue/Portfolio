@@ -13,7 +13,7 @@ var PROFILE = {
 };
 
 var METRICS = [
-  { label: "Public Repos", value: "28", delta: "+4 QTD" },
+  { label: "Public Repos", value: "30+", delta: "+ regulator scrapers" },
   { label: "Active Internship", value: "FedEx", delta: "Planning × Eng" },
   { label: "CGPA", value: "3.05", delta: "/ 4.00" },
   { label: "Years Shipping", value: "03", delta: "since 2023" },
@@ -112,6 +112,31 @@ var PROJECTS = [
     repo: null,
   },
   {
+    id: "REG",
+    ticker: "REG.TRI",
+    name: "Regulator Trio — SEBI · AMFI · IRDAI",
+    slug: "regulator-scrapers",
+    tag: "FINTECH / DATA ENG",
+    year: "2026",
+    status: "SHIPPING",
+    summary: "Three async scrapers reverse-engineered against the Indian regulators to extract every recognised intermediary, mutual fund distributor and insurance agent in the country.",
+    stack: ["Python", "httpx", "asyncio", "pandas", "pyarrow", "reverse-eng"],
+    highlights: [
+      "SEBI: 37 intermediary types, 35K+ entities (Stock Brokers, AIFs, FPIs, MFs, PMs)",
+      "AMFI: full MFD database extracted by PIN code, consolidated into one dataset",
+      "IRDAI: 19,586 PINs × 66 insurers × 3 types — ~1.29M queries, resumable",
+      "All async, with retry/backoff, manifests, truncation logs and Parquet output",
+    ],
+    kpis: [
+      { k: "Scrapers", v: "3" },
+      { k: "Records", v: "100K+" },
+      { k: "Concurrency", v: "20×" },
+      { k: "Auth needed", v: "None" },
+    ],
+    accent: "--cyan",
+    repo: "https://github.com/Akilucky-rogue?tab=repositories",
+  },
+  {
     id: "WLE",
     ticker: "WLLE",
     name: "Wall-ette — Mindful Wallet Tracker",
@@ -133,7 +158,7 @@ var PROJECTS = [
       { k: "Platforms", v: "Web + Android" },
       { k: "Security", v: "2FA Sim" },
     ],
-    accent: "--cyan",
+    accent: "--blue",
     repo: "https://github.com/Akilucky-rogue/Wall-E",
     live: "https://wall-e-7a113.web.app",
   },
@@ -183,7 +208,7 @@ var PROJECTS = [
       { k: "Valid.", v: "Zod" },
       { k: "Domain", v: "Marine" },
     ],
-    accent: "--blue",
+    accent: "--cyan",
     repo: "https://github.com/Akilucky-rogue/Eco-Sanjivani",
   },
   {
@@ -285,16 +310,16 @@ var EDUCATION = [
 ];
 
 var GH_REPOS = [
-  { name: "StockScreener", lang: "Python", desc: "ML-ranked alpha + SEBI-compliant algo strategies" },
-  { name: "AMFI-webscraper", lang: "Python", desc: "Async MFD extraction by PIN code" },
-  { name: "SEBI-webscraper", lang: "Python", desc: "Recognised Intermediaries dataset grabber" },
-  { name: "IRDAI-webscraper", lang: "Python", desc: "Insurance agent locator pipeline" },
-  { name: "Wall-E", lang: "TS", desc: "Mindful AI wallet tracker" },
-  { name: "Eco-Sanjivani", lang: "TS", desc: "Marine conservation data platform" },
-  { name: "GenoScan", lang: "TS", desc: "DNA variant + therapy workbench" },
-  { name: "HeartSync", lang: "TS", desc: "HR telemetry & alerting" },
-  { name: "tickfunds-wealth-india", lang: "TS", desc: "Wealth advisor tooling" },
-  { name: "CipherShare", lang: "Go", desc: "Decentralised secure storage" },
+  { name: "StockScreener", lang: "Python", desc: "India Quant Screener Pro — ML-ranked alpha + SEBI-compliant strategies" },
+  { name: "SEBI-webscraper", lang: "Python", desc: "All SEBI recognised intermediaries — 37 types, 35K+ entities" },
+  { name: "AMFI-webscraper", lang: "Python", desc: "Async MFD extraction by PIN code, consolidated dataset" },
+  { name: "IRDAI-webscraper", lang: "Python", desc: "19,586 PINs × 66 insurers — ~1.29M-query state-by-state scraper" },
+  { name: "Wall-E", lang: "TS", desc: "Wall-ette — mindful AI wallet tracker (live)" },
+  { name: "Eco-Sanjivani", lang: "TS", desc: "Marine conservation data platform on Supabase" },
+  { name: "GenoScan", lang: "TS", desc: "DNA variant + AI therapy workbench" },
+  { name: "HeartSync", lang: "TS", desc: "HR telemetry + caregiver alerting" },
+  { name: "tickfunds-wealth-india", lang: "TS", desc: "Wealth advisor surface (Vite + shadcn)" },
+  { name: "CipherShare", lang: "Go", desc: "Decentralised secure storage — microservices" },
   { name: "Budget-Watch", lang: "TS", desc: "Budget alerting prototype" },
   { name: "Commune-One", lang: "Py", desc: "Urban mobility analytics platform" },
   { name: "action-eco-nexus", lang: "TS", desc: "Climate action nexus" },
@@ -307,9 +332,13 @@ var GH_REPOS = [
   { name: "flowchart-zen-garden", lang: "TS", desc: "Flowchart playground" },
   { name: "Piano-project", lang: "JS", desc: "Web audio piano" },
   { name: "My-Portfolio", lang: "TS", desc: "Content-driven portfolio shell" },
+  { name: "Portfolio", lang: "TS", desc: "This site — terminal aesthetic + 3D DNA intro" },
   { name: "CreditSamriddhi", lang: "TS", desc: "Credit intelligence (private)" },
   { name: "Aethion", lang: "TS", desc: "Private build" },
   { name: "Tradesim", lang: "Py", desc: "Automated trading analytics (private)" },
+  { name: "eco-quiz-match", lang: "TS", desc: "Eco quiz · private" },
+  { name: "Jarvis", lang: "Py", desc: "Personal assistant build (private · long-running)" },
+  { name: "secure-cloud-share-vault", lang: "TS", desc: "Secure cloud share vault (private)" },
 ];
 
 window.PORTFOLIO = { PROFILE, METRICS, EXPERIENCE, PROJECTS, SKILLS, CERTS, EDUCATION, GH_REPOS };
